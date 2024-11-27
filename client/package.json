@@ -3,13 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@pinata/sdk": "^2.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@tonconnect/sdk": "^3.0.5",
+    "@tonconnect/ui-react": "^2.0.9",
+    "assert": "^2.1.0",
+    "axios": "^1.7.8",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "ethers": "^6.13.4",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tonweb": "^0.0.66",
+    "tty-browserify": "^0.0.1",
+    "url": "^0.11.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -35,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }

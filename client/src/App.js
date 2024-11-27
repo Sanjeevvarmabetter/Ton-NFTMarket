@@ -1,41 +1,50 @@
 import React, { useState } from "react";
-import { TonConnect } from "@tonconnect/sdk";
+import TonWeb from "tonweb";
+
+// Ensure Buffer is available in the browser
+import { Buffer } from 'buffer';
+global.Buffer = Buffer;
 
 const App = () => {
+  const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [error, setError] = useState(null);
 
-  const connectWallet = async () => {
-    const tonConnect = new TonConnect({
-      manifestUrl: `${window.location.origin}/tonconnect-manifest.json`,
-    });
-
+  // Connect to Tonkeeper wallet
+  const connectToWallet = async () => {
     try {
-      const wallet = await tonConnect.connect();
-      setWalletAddress(wallet?.address);
-      console.log("Wallet connected:", wallet);
+      if (window.ton) {
+        // TonWeb instance for interaction
+        const tonweb = new TonWeb(window.ton);
+
+        // Request wallet address using TonWeb from the window object (Tonkeeper integration)
+        const wallet = await tonweb.wallet.create({ publicKey: "0QD_0cdNA9pPwvv2zx6dax6C58HyM987CMndum3tmegDoy0o" });
+        const address = await wallet.getAddress();
+
+        // Set wallet connected state and address
+        setWalletConnected(true);
+        setWalletAddress(address.toString(true, true, false)); // Display human-readable address
+      } else {
+        alert("Tonkeeper wallet is not installed!");
+      }
     } catch (err) {
-      console.error("Failed to connect wallet:", err);
+      console.error("Error connecting to wallet:", err);
+      setError("Failed to connect to wallet. Please ensure Tonkeeper is installed.");
     }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>NFT Marketplace</h1>
-      <button
-        onClick={connectWallet}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#0088cc",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Connect to Tonkeeper
-      </button>
-      {walletAddress && <p>Connected Wallet: {walletAddress}</p>}
+    <div className="App">
+      <h1>Connect to Tonkeeper Wallet</h1>
+      {!walletConnected ? (
+        <button onClick={connectToWallet}>Connect Wallet</button>
+      ) : (
+        <div>
+          <p>Connected to: {walletAddress}</p>
+          <button onClick={() => setWalletConnected(false)}>Disconnect</button>
+        </div>
+      )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
